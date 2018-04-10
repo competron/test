@@ -1,0 +1,23 @@
+configure service vpls 812013859
+            mesh-sdp 8100 create
+                restrict-protected-src 
+            exit
+exit all
+
+configure service vpls 814013559
+            mesh-sdp 8100 create
+                restrict-protected-src 
+            exit
+exit all
+
+configure service vpls 812013859
+            mesh-sdp 8100 create
+                restrict-protected-src 
+            exit
+exit all
+
+configure service vpls 886013759
+            mesh-sdp 8100 create
+                restrict-protected-src 
+            exit
+exit all

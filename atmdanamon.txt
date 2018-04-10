@@ -1,0 +1,64 @@
+show router policy  "export-map:655555"
+show router policy  "import-map:655555"
+configure router policy-options
+begin
+community "export-RT:655555" members "target:65500:555"
+community "import-RT:655555" members "target:65500:555"
+policy-statement "export-map:655555"
+    description "export policy for VRF ATMDANAMON"
+    entry 100
+        description "redistribute connected to BGP"
+        from
+            protocol direct
+        exit
+        to
+            protocol bgp-vpn
+        exit
+        action accept
+            community add "export-RT:655555"
+        exit
+    exit
+    entry 200
+        description "redistribute static to BGP"
+        from
+            protocol static
+        exit
+        to
+            protocol bgp-vpn
+        exit
+        action accept
+            community add "export-RT:655555"
+        exit
+    exit
+    entry 300
+        description "redistribute ospf to BGP"
+        from
+            protocol ospf
+        exit
+        to
+            protocol bgp-vpn
+        exit
+        action accept
+            community add "export-RT:655555"
+        exit              
+    exit
+  exit
+  policy-statement "import-map:655555"
+    description "import policy for VRF ATMDANAMON"
+    entry 10
+        from
+            protocol bgp-vpn
+            community "import-RT:655555"
+        exit
+        action accept
+        exit
+    exit
+   exit
+commit
+exit all
+
+configure service customer 65555 create
+description "655555:ATMDANAMON"	
+exit
+
+

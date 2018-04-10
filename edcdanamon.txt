@@ -1,0 +1,62 @@
+show router policy  "import-map:655583"
+show router policy  "export-map:655583"
+configure router policy-options
+begin
+community "export-RT:655583" members "target:65500:583"
+            community "import-RT:655583" members "target:65500:583"
+            policy-statement "export-map:655583"
+                description "export policy for VRF EDCDANAMON"
+                entry 100
+                    description "redistribute connected to BGP"
+                    from
+                        protocol direct
+                    exit
+                    to
+                        protocol bgp-vpn
+                    exit
+                    action accept
+                        community add "export-RT:655583"
+                    exit
+                exit
+                entry 200
+                    description "redistribute static to BGP"
+                    from
+                        protocol static
+                    exit
+                    to
+                        protocol bgp-vpn
+                    exit
+                    action accept
+                        community add "export-RT:655583"
+                    exit
+                exit
+                entry 300
+                    description "redistribute ospf to BGP"
+                    from
+                        protocol ospf
+                    exit
+                    to
+                        protocol bgp-vpn
+                    exit
+                    action accept
+                        community add "export-RT:655583"
+                    exit
+                exit
+           exit
+            policy-statement "import-map:655583"
+                description "import policy for VRF EDCDANAMON"
+                entry 10
+                    from
+                        protocol bgp-vpn
+                        community "import-RT:655583"
+                    exit
+                    action accept
+                    exit
+                exit
+  exit
+  commit
+exit all
+
+configure service customer 65583 create
+description "655583:VPN_PLN"
+exit
